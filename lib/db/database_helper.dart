@@ -39,9 +39,7 @@ class DatabaseHelper {
   void _createDb(Database db, int newVersion) async {
     await db.execute('''Create TABLE $tableTodos (
                   $colId INTEGER PRIMARY KEY AUTOINCREMENT,
-                  $colName TEXT,
-                  $colDescription TEXT,
-                  $colbefdate TEXT
+                  
                    )
     
     ''');
@@ -55,12 +53,11 @@ class DatabaseHelper {
 
     String insertQuery = '''
     INSERT INTO $tableTodos
-      ( $colName, $colDescription, $colbefdate )
-      VALUES ( ?, ?, ?)
+      ( $colName)
+      VALUES (?)
     ''';
 
-    int result = await db
-        .rawInsert(insertQuery, [todo.name, todo.description, todo.befdate]);
+    int result = await db.rawInsert(insertQuery, [todo.name]);
 
     return result;
   }
@@ -89,15 +86,7 @@ class DatabaseHelper {
     return result;
   }
 
-  // update
-  Future<int> updateTodos(Todos todo) async {
-    Database db = await instance.database;
-    int result = await db
-        .update('tbl_dog', todo.toMap(), where: 'id=?', whereArgs: [todo.id]);
-    return result;
-  }
-
-  // read operation
+  // read for search operation
   Future<List<Todos>> searchTodos({required String name}) async {
     List<Todos> todo = [];
 

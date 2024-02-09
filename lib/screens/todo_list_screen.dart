@@ -27,6 +27,10 @@ class _StudentListScreenState extends State<TodosListScreen> {
     super.dispose();
   }
 
+  Future refresh() async {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,54 +56,57 @@ class _StudentListScreenState extends State<TodosListScreen> {
         },
         child: Icon(Icons.add),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: TextField(
-              onChanged: (value) {
-                _searchTodos();
-              },
-              controller: nameController,
-              decoration: InputDecoration(
-                hintText: 'Search',
-                prefixIcon: Icon(Icons.search),
-                filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide.none,
+      body: RefreshIndicator(
+        onRefresh: refresh,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: TextField(
+                onChanged: (value) {
+                  _searchTodos();
+                },
+                controller: nameController,
+                decoration: InputDecoration(
+                  hintText: 'Search',
+                  prefixIcon: Icon(Icons.search),
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide.none,
+                  ),
                 ),
               ),
             ),
-          ),
-          Expanded(
-            child: FutureBuilder<List<Todos>>(
-              future: DatabaseHelper.instance
-                  .searchTodos(name: nameController.text.trim()),
-              builder:
-                  (BuildContext context, AsyncSnapshot<List<Todos>> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text('No students found'));
-                } else {
-                  return ListView.builder(
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      Todos todo = snapshot.data![index];
-                      return TodoCard(
-                        todo: todo,
-                        onDelete: () => _showDeleteConfirmationDialog(todo),
-                      );
-                    },
-                  );
-                }
-              },
+            Expanded(
+              child: FutureBuilder<List<Todos>>(
+                future: DatabaseHelper.instance
+                    .searchTodos(name: nameController.text.trim()),
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<Todos>> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Center(child: Text('No students found'));
+                  } else {
+                    return ListView.builder(
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        Todos todo = snapshot.data![index];
+                        return TodoCard(
+                          todo: todo,
+                          onDelete: () => _showDeleteConfirmationDialog(todo),
+                        );
+                      },
+                    );
+                  }
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

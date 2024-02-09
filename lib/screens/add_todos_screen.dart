@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:todo_app/db/database_helper.dart';
 import 'package:todo_app/models/todo.dart';
+import 'package:todo_app/screens/todo_list_screen.dart';
 
 class AddTodosScreen extends StatefulWidget {
   const AddTodosScreen({Key? key}) : super(key: key);
@@ -13,8 +14,7 @@ class AddTodosScreen extends StatefulWidget {
 class _AddTodosScreenState extends State<AddTodosScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  late String name, description, completeBefore;
-
+  late String name;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,39 +48,6 @@ class _AddTodosScreenState extends State<AddTodosScreen> {
                   },
                 ),
                 SizedBox(height: 16),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Description',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a description';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    description = value!;
-                  },
-                ),
-                SizedBox(height: 16),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Complete Before',
-                    hintText: 'YYYY-MM-DD',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a completion date';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    completeBefore = value!;
-                  },
-                ),
-                SizedBox(height: 16),
                 ElevatedButton(
                   style:
                       ElevatedButton.styleFrom(backgroundColor: Colors.black),
@@ -90,8 +57,6 @@ class _AddTodosScreenState extends State<AddTodosScreen> {
 
                       final todo = Todos(
                         name: name,
-                        description: description,
-                        befdate: completeBefore,
                       );
 
                       final result =

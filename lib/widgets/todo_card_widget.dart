@@ -40,13 +40,24 @@ class _StudentCardState extends State<TodoCard> {
                 icon: done == true
                     ? Icon(Icons.check_box_outline_blank_outlined)
                     : Icon(Icons.check_box)),
-            Text(
-              widget.todo.name,
-              style: TextStyle(
-                  decoration: done == false
-                      ? TextDecoration.lineThrough
-                      : TextDecoration.none,
-                  fontSize: 20),
+            Container(
+              width: 260,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      widget.todo.name,
+                      style: TextStyle(
+                          decoration: done == false
+                              ? TextDecoration.lineThrough
+                              : TextDecoration.none,
+                          fontSize: 20),
+                    ),
+                  ],
+                ),
+              ),
             ),
             IconButton(onPressed: widget.onDelete, icon: Icon(Icons.delete))
           ],
